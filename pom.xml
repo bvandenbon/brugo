@@ -12,6 +12,9 @@
     </dependencies>
 
     <build>
+        <!--override maven's default source path.-->
+        <sourceDirectory>src/</sourceDirectory>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
