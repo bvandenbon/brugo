@@ -3,10 +3,11 @@
   <groupId>brugo</groupId>
   <artifactId>brugo</artifactId>
   <versioning>
-    <release>0.1</release>
+    <release>0.1.0</release>
     <versions>
       <version>0.1</version>
+      <version>0.1.0</version>
     </versions>
-    <lastUpdated>20180728195328</lastUpdated>
+    <lastUpdated>20180728210941</lastUpdated>
   </versioning>
 </metadata>
