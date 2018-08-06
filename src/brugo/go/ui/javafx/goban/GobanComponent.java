@@ -10,6 +10,10 @@ import javafx.scene.layout.AnchorPane;
 import brugo.go.bo.state.Intersection;
 import brugo.go.bo.state.Position;
 
+/**
+ * A resizable goban component for javafx.
+ * @see brugo.go.ui.javafx.goban.GobanComponentDemo
+ */
 public class GobanComponent extends AnchorPane {
   protected GobanDrawer gobanDrawer;
   protected Position position;

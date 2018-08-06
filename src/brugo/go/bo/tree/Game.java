@@ -3,7 +3,7 @@ package brugo.go.bo.tree;
 import brugo.go.bo.state.Intersection;
 import brugo.go.bo.state.Move;
 
-public class Game {
+public final class Game {
   private String filename;
   private PositionNode root;
 

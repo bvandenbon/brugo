@@ -8,6 +8,9 @@ import brugo.go.bo.state.Intersection;
 import brugo.go.bo.state.Position;
 import brugo.go.bo.state.Status;
 
+/**
+ * A demo for the use of a GobanComponent.
+ */
 public class GobanComponentDemo extends Application {
 
   @Override
@@ -40,8 +43,6 @@ public class GobanComponentDemo extends Application {
 
     primaryStage.setScene(new Scene(rootPane, 500, 500));
     primaryStage.show();
-
-    //canvas.redraw();
   }
 
   public static void main(String[] args) {

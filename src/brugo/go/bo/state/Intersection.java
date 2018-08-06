@@ -12,10 +12,15 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import brugo.go.io.jaxb.IntersectionSGFJavaTypeAdapter;
 
+/**
+ * An intersection represents a spot on the board where 2 lines cross.
+ * A 19x19 board has 361 intersections, and there is a cache that reuses 361 instances for these positions.
+ * Also intersections that lay just one intersection out of range of the board are cached.
+ */
 @XmlRootElement(name = "intersection")
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlJavaTypeAdapter(IntersectionSGFJavaTypeAdapter.class)
-public class Intersection implements Comparable<Intersection> {
+public final class Intersection implements Comparable<Intersection> {
   private static int cacheSize = 19;
   private static Intersection[][] instances = new Intersection[cacheSize + 2][cacheSize + 2];
 

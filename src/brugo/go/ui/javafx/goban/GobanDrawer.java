@@ -11,6 +11,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * Draws a goban on top of a GraphicsContext
+ */
 public class GobanDrawer {
   protected static final Paint COLOR_BOARD = Paint.valueOf("#efbd20");
   protected static final Paint COLOR_GRID_LINES = Paint.valueOf("#464637");

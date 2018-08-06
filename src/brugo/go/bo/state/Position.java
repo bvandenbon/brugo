@@ -6,7 +6,7 @@ import brugo.common.util.CompareChain;
 import brugo.common.util.Pair;
 
 @SuppressWarnings("unused")
-public class Position implements Comparable {
+public final class Position implements Comparable {
   private static int hash = 0;
 
   private double komi;

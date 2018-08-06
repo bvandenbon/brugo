@@ -6,7 +6,9 @@ import javafx.event.EventType;
 import javafx.scene.input.InputEvent;
 import brugo.go.bo.state.Intersection;
 
-
+/**
+ * Events fired when the mouse hovers/clicks/drags the goban component.
+ */
 public class GobanEvent extends InputEvent {
   /**
    * Common supertype for all goban event types.

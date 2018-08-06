@@ -166,7 +166,10 @@ public class SGFEncoder implements Encoder
     return "" + ((char) ('a' + intersection.getX())) + ((char) ('a' + intersection.getY()));
   }
 
-  public Intersection fromSGF(String coordinate) {
+  /**
+   * todo find a cleaner solution for this.
+   */
+  public Intersection fromCoordinateSGF(String coordinate) {
     if (coordinate == null) return null;
     if (coordinate.length() != 2) return null;
     char left = coordinate.charAt(0);

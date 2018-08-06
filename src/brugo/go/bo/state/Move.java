@@ -1,8 +1,11 @@
 package brugo.go.bo.state;
 
-public class Move {
-  Intersection point;
-  Status color;
+/**
+ * A move is played at a certain point (i.e. Intersection) and for a certain color (i.e. Status).
+ */
+public final class Move {
+  private Intersection point;
+  private Status color;
 
   public Move(Intersection point, Status color) {
     this.point = point;
