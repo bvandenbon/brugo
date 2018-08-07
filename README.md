@@ -2,28 +2,17 @@
 Brugo is a java library for the game of go
 
 # Setup
-If you use maven, you can configure brugo in your pom.xml as follows.
+If you use maven, you can configure brugo in your `pom.xml` as follows.
 
     <dependencies>
         <dependency>
-            <groupId>brugo</groupId>
+            <groupId>be.brugo</groupId>
             <artifactId>brugo</artifactId>
             <version>LATEST</version>
         </dependency>
     </dependencies>
 
-    <repositories>
-        <repository>
-            <id>brugo</id>
-            <url>https://github.com/brugo/brugo/raw/repository/</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-    </repositories>
-
-# Getting Started
+# Getting Started with Positions
 
     // Intersection represents a point on the board.
     Intersection is = Intersection.valueOf(x, y);
@@ -37,4 +26,9 @@ If you use maven, you can configure brugo in your pom.xml as follows.
     // (captured stones will be removed automatically.)
     Position p2 = p1.play(Intersection.valueOf(16, 3), Status.BLACK);
     
+# Getting started with JavaFx
+
+   Launch brugo.go.ui.javafx.goban.GobanComponentDemo for a demo.
+   
+   
     
