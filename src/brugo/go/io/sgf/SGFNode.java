@@ -37,6 +37,13 @@ public class SGFNode {
         return attributeMap.remove(pPropertyName);
     }
 
+    public void removeProperties(String... pPropertyNames)
+    {
+        if (pPropertyNames == null) return;
+        for (String property : pPropertyNames)
+            removeProperty(property);
+    }
+
     public Map<String, String> getMap() {
         return attributeMap;
     }
