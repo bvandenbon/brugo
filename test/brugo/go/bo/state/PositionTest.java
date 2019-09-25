@@ -1,7 +1,6 @@
 package brugo.go.bo.state;
 
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.util.*;
@@ -132,20 +131,32 @@ public class PositionTest {
   }
 
   private void givenBd(String board) {
-    Deque<String> lines = new LinkedList<>(Arrays.asList(board.split("\n")));
-    int white = Integer.valueOf(lines.removeLast().split(" ")[2]);
-    int black = Integer.valueOf(lines.removeLast().split(" ")[2]);
+    List<String> lines = new LinkedList<>(Arrays.asList(board.split("\n")));
+    int white = getCaptured(lines);
+    int black = getCaptured(lines);
 
-    lines.removeFirst();
-    lines.removeLast();
-    List<String> field = lines.stream()
-            .map(line -> line.replaceAll("[| \n]", ""))
-            .collect(toList());
+    List<String> field = clean(lines);
 
     position = new Position(6, 6.5);
     position.setCapturedStonesCount(Status.BLACK, black);
     position.setCapturedStonesCount(Status.WHITE, white);
 
+    given(field);
+  }
+
+  private List<String> clean(List<String> lines) {
+    lines.remove(0);
+    lines.remove(lines.size() - 1);
+    return lines.stream()
+            .map(line -> line.replaceAll("[| \n]", ""))
+            .collect(toList());
+  }
+
+  private int getCaptured(List<String> lines) {
+    return Integer.valueOf(lines.remove(lines.size() - 1).split(" ")[2]);
+  }
+
+  private void given(List<String> field) {
     for (int y = 0; y < field.size(); y++) {
       String row = field.get(y);
       for (int x = 0; x < row.length(); x++) {
