@@ -253,7 +253,7 @@ public class PositionTest {
   }
 
   @Test
-  public void shouldCantMakeAMove_whenKoSituation() {
+  public void shouldCantMakeAMove_whenKoSituation_caseArround() {
     // given
     givenBd("---------------\n" +
             "| . . . . . . |\n" +
@@ -293,6 +293,53 @@ public class PositionTest {
             "| . . . X O . |\n" +
             "| . . X O k O |\n" +
             "| . . . X O . |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 1 stones.\n" +
+            "O captured 0 stones.\n");
+  }
+
+  @Test
+  public void shouldCantMakeAMove_whenKoSituation_caseWithBoarder1() {
+    // given
+    givenBd("---------------\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . O |\n" +
+            "| . . . . O X |\n" +
+            "| . . . . X . |\n" +
+            "| . . . . . X |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 0 stones.\n" +
+            "O captured 0 stones.\n");
+
+    // when
+    position = position.play(Intersection.valueOf(5, 3), Status.WHITE);
+
+    // then
+    assertB("---------------\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . O |\n" +
+            "| . . . . O k |\n" +
+            "| . . . . X O |\n" +
+            "| . . . . . X |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 1 stones.\n" +
+            "O captured 0 stones.\n");
+
+    // when (forbidden)
+    Position newPosition = position.play(Intersection.valueOf(5, 2), Status.BLACK);
+
+    // then
+    assertEquals(newPosition, null);
+
+    assertB("---------------\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . O |\n" +
+            "| . . . . O k |\n" +
+            "| . . . . X O |\n" +
+            "| . . . . . X |\n" +
             "| . . . . . . |\n" +
             "---------------\n" +
             "X captured 1 stones.\n" +
