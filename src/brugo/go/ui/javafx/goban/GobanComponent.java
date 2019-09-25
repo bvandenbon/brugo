@@ -3,6 +3,7 @@ package brugo.go.ui.javafx.goban;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import brugo.go.bo.state.Status;
 import javafx.scene.canvas.GraphicsContext;
@@ -24,6 +25,7 @@ public class GobanComponent extends AnchorPane {
   protected GobanCanvas canvas;
   protected Map<Intersection, GobanDrawer.DrawPosition> drawPositionMap;
   protected Set<Intersection> selectedIntersections;
+  private Consumer<String> onChange;
 
   public GobanComponent() {
     // create drawer
@@ -40,6 +42,7 @@ public class GobanComponent extends AnchorPane {
 
     this.position = position;
     canvas.redraw();
+    updateInfo();
   }
 
   public void setSelectedIntersection(Intersection intersection) {
@@ -61,6 +64,10 @@ public class GobanComponent extends AnchorPane {
 
   public Position getPosition() {
     return position;
+  }
+
+  public void onChange(Consumer<String> onChange) {
+    this.onChange = onChange;
   }
 
   private class GobanCanvas extends javafx.scene.canvas.Canvas {
@@ -87,15 +94,15 @@ public class GobanComponent extends AnchorPane {
 
       addEventHandler(KeyEvent.KEY_PRESSED, event -> {
         if (KeyCode.ESCAPE.equals(event.getCode())) {
-          current = current.getOpponentStatus();
+          invertCurrent();
         }
       });
 
       addEventHandler(GobanEvent.GOBAN_CLICKED, event -> {
         Position newPostion = position.play(event.getIntersection(), current);
         if (newPostion != null) {
+          invertCurrent();
           setPosition(newPostion);
-          current = current.getOpponentStatus();
         }
       });
     }
@@ -114,5 +121,19 @@ public class GobanComponent extends AnchorPane {
 
       drawPositionMap = gobanDrawer.drawPosition(gctx2D, position, fullWidthPx, fullHeightPx, selectedIntersections);
     }
+  }
+
+  private void invertCurrent() {
+    current = current.getOpponentStatus();
+    updateInfo();
+  }
+
+  public void updateInfo() {
+    onChange.accept(String.format("Current: %s | Captured: X:%s O:%s | Active: X:%s O:%s",
+            current,
+            position.getCapturedStonesCount(Status.BLACK),
+            position.getCapturedStonesCount(Status.WHITE),
+            position.getIntersectionCountByColor(Status.BLACK),
+            position.getIntersectionCountByColor(Status.WHITE)));
   }
 }

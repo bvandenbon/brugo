@@ -15,8 +15,6 @@ public class GobanComponentDemo extends Application {
 
   @Override
   public void start(Stage primaryStage) {
-    primaryStage.setTitle("Goban Component Demo");
-
     AnchorPane rootPane = new AnchorPane();
 
     // create position
@@ -30,6 +28,7 @@ public class GobanComponentDemo extends Application {
 
     // create goban component
     GobanComponent gobanComponent = new GobanComponent();
+    gobanComponent.onChange(title -> primaryStage.setTitle("Goban Demo | " + title));
 
     // show position in goban component
     gobanComponent.setPosition(pos);
