@@ -221,7 +221,7 @@ public class PositionTest {
   }
 
   @Test
-  public void shouldDoNothing_whenSuicidalStep() {
+  public void shouldCantMakeAMove_whenSuicidalStep() {
     // given
     givenBd("---------------\n" +
             "| . . . . . . |\n" +
@@ -249,6 +249,53 @@ public class PositionTest {
             "| . . . . . . |\n" +
             "---------------\n" +
             "X captured 0 stones.\n" +
+            "O captured 0 stones.\n");
+  }
+
+  @Test
+  public void shouldCantMakeAMove_whenKoSituation() {
+    // given
+    givenBd("---------------\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . X O . |\n" +
+            "| . . X . X O |\n" +
+            "| . . . X O . |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 0 stones.\n" +
+            "O captured 0 stones.\n");
+
+    // when
+    position = position.play(Intersection.valueOf(3, 3), Status.WHITE);
+
+    // then
+    assertB("---------------\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . X O . |\n" +
+            "| . . X O k O |\n" +
+            "| . . . X O . |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 1 stones.\n" +
+            "O captured 0 stones.\n");
+
+    // when (forbidden)
+    Position newPosition = position.play(Intersection.valueOf(4, 3), Status.BLACK);
+
+    // then
+    assertEquals(newPosition, null);
+
+    assertB("---------------\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . X O . |\n" +
+            "| . . X O k O |\n" +
+            "| . . . X O . |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 1 stones.\n" +
             "O captured 0 stones.\n");
   }
 
