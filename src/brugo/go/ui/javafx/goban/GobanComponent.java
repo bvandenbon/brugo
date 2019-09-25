@@ -39,7 +39,7 @@ public class GobanComponent extends AnchorPane {
   }
 
   public void setPosition(Position position, Status status) {
-    if (this.position == position || current == status) return;
+    if (this.position == position && current == status) return;
 
     this.position = position;
     this.current = status;
