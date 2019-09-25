@@ -31,7 +31,7 @@ public class GobanComponentDemo extends Application {
     gobanComponent.onChange(title -> primaryStage.setTitle("Goban Demo | " + title));
 
     // show position in goban component
-    gobanComponent.setPosition(pos);
+    gobanComponent.setPosition(pos, Status.BLACK);
 
     // add component to pane and link to the 4 borders.
     rootPane.getChildren().add(gobanComponent);

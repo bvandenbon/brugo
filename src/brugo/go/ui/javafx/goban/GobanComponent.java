@@ -1,8 +1,6 @@
 package brugo.go.ui.javafx.goban;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
 import brugo.go.bo.state.Status;
@@ -19,13 +17,14 @@ import brugo.go.bo.state.Position;
  * @see brugo.go.ui.javafx.goban.GobanComponentDemo
  */
 public class GobanComponent extends AnchorPane {
-  protected Status current = Status.BLACK;
+  protected Status current;
   protected GobanDrawer gobanDrawer;
   protected Position position;
   protected GobanCanvas canvas;
   protected Map<Intersection, GobanDrawer.DrawPosition> drawPositionMap;
   protected Set<Intersection> selectedIntersections;
-  private Consumer<String> onChange;
+  protected Consumer<String> onChange;
+  protected Deque<Step> history = new LinkedList<>();
 
   public GobanComponent() {
     // create drawer
@@ -37,12 +36,15 @@ public class GobanComponent extends AnchorPane {
     getChildren().add(canvas);
   }
 
-  public void setPosition(Position position) {
-    if (this.position == position) return;
+  public void setPosition(Position position, Status status) {
+    if (this.position == position || current == status) return;
 
     this.position = position;
+    this.current = status;
+
     canvas.redraw();
     updateInfo();
+    saveStep();
   }
 
   public void setSelectedIntersection(Intersection intersection) {
@@ -93,16 +95,17 @@ public class GobanComponent extends AnchorPane {
       });
 
       addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-        if (KeyCode.ESCAPE.equals(event.getCode())) {
-          invertCurrent();
+        if (KeyCode.LEFT.equals(event.getCode())) {
+          goBack();
+        } else if (KeyCode.ESCAPE.equals(event.getCode())) {
+          setPosition(position, current.getOpponentStatus());
         }
       });
 
       addEventHandler(GobanEvent.GOBAN_CLICKED, event -> {
         Position newPostion = position.play(event.getIntersection(), current);
         if (newPostion != null) {
-          invertCurrent();
-          setPosition(newPostion);
+          setPosition(newPostion, current.getOpponentStatus());
         }
       });
     }
@@ -123,9 +126,13 @@ public class GobanComponent extends AnchorPane {
     }
   }
 
-  private void invertCurrent() {
-    current = current.getOpponentStatus();
-    updateInfo();
+  private void goBack() {
+    if (history.size() <= 1) return;
+
+    history.removeLast();
+    Step step = history.peekLast();
+    setPosition(step.getPosition(), step.getCurrent());
+    history.removeLast();
   }
 
   public void updateInfo() {
@@ -135,5 +142,9 @@ public class GobanComponent extends AnchorPane {
             position.getCapturedStonesCount(Status.WHITE),
             position.getIntersectionCountByColor(Status.BLACK),
             position.getIntersectionCountByColor(Status.WHITE)));
+  }
+
+  private void saveStep() {
+    history.add(new Step(current, position));
   }
 }
