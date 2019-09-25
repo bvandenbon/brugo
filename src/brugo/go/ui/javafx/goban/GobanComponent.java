@@ -6,6 +6,8 @@ import java.util.Set;
 
 import brugo.go.bo.state.Status;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import brugo.go.bo.state.Intersection;
@@ -65,6 +67,7 @@ public class GobanComponent extends AnchorPane {
 
     public GobanCanvas() {
       GobanComponent wrapper = GobanComponent.this;
+      setFocusTraversable(true);
       widthProperty().bind(wrapper.widthProperty());
       heightProperty().bind(wrapper.heightProperty());
 
@@ -80,6 +83,12 @@ public class GobanComponent extends AnchorPane {
         if (drawPosition == null) return;
         Intersection intersection = drawPosition.getIntersection();
         if (intersection != null) fireEvent(new GobanEvent(GobanEvent.GOBAN_CLICKED, intersection));
+      });
+
+      addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+        if (KeyCode.ESCAPE.equals(event.getCode())) {
+          current = current.getOpponentStatus();
+        }
       });
 
       addEventHandler(GobanEvent.GOBAN_CLICKED, event -> {
