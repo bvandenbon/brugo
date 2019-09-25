@@ -130,6 +130,36 @@ public class PositionTest {
             "O captured 6 stones.\n");
   }
 
+  @Test
+  public void shouldRemoved_whenRegionHasNoLiberty() {
+    // given
+    givenBd("---------------\n" +
+            "| . . . . . . |\n" +
+            "| . . X X . . |\n" +
+            "| . X O O X . |\n" +
+            "| . X O O X . |\n" +
+            "| . . X . . . |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 0 stones.\n" +
+            "O captured 0 stones.\n");
+
+    // when
+    position = position.play(Intersection.valueOf(3, 4), Status.BLACK);
+
+    // then
+    assertB("---------------\n" +
+            "| . . . . . . |\n" +
+            "| . . X X . . |\n" +
+            "| . X . . X . |\n" +
+            "| . X . . X . |\n" +
+            "| . . X X . . |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 0 stones.\n" +
+            "O captured 4 stones.\n");
+  }
+
   private void givenBd(String board) {
     List<String> lines = new LinkedList<>(Arrays.asList(board.split("\n")));
     int white = getCaptured(lines);
