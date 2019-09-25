@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import brugo.go.bo.state.Status;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -15,6 +16,7 @@ import brugo.go.bo.state.Position;
  * @see brugo.go.ui.javafx.goban.GobanComponentDemo
  */
 public class GobanComponent extends AnchorPane {
+  protected Status current = Status.BLACK;
   protected GobanDrawer gobanDrawer;
   protected Position position;
   protected GobanCanvas canvas;
@@ -78,6 +80,14 @@ public class GobanComponent extends AnchorPane {
         if (drawPosition == null) return;
         Intersection intersection = drawPosition.getIntersection();
         if (intersection != null) fireEvent(new GobanEvent(GobanEvent.GOBAN_CLICKED, intersection));
+      });
+
+      addEventHandler(GobanEvent.GOBAN_CLICKED, event -> {
+        Position newPostion = position.play(event.getIntersection(), current);
+        if (newPostion != null) {
+          setPosition(newPostion);
+          current = current.getOpponentStatus();
+        }
       });
     }
 
