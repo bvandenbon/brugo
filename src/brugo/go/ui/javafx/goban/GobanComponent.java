@@ -24,7 +24,8 @@ public class GobanComponent extends AnchorPane {
   protected Map<Intersection, GobanDrawer.DrawPosition> drawPositionMap;
   protected Set<Intersection> selectedIntersections;
   protected Consumer<String> onChange;
-  protected Deque<Step> history = new LinkedList<>();
+  protected List<Step> history = new LinkedList<>();
+  protected int historyIndex;
 
   public GobanComponent() {
     // create drawer
@@ -44,7 +45,10 @@ public class GobanComponent extends AnchorPane {
 
     canvas.redraw();
     updateInfo();
-    saveStep();
+
+    if (history.isEmpty()) {
+      saveStep();
+    }
   }
 
   public void setSelectedIntersection(Intersection intersection) {
@@ -97,8 +101,11 @@ public class GobanComponent extends AnchorPane {
       addEventHandler(KeyEvent.KEY_PRESSED, event -> {
         if (KeyCode.LEFT.equals(event.getCode())) {
           goBack();
+        } else if (KeyCode.RIGHT.equals(event.getCode())) {
+          goForward();
         } else if (KeyCode.ESCAPE.equals(event.getCode())) {
           setPosition(position, current.getOpponentStatus());
+          saveStep();
         }
       });
 
@@ -106,6 +113,7 @@ public class GobanComponent extends AnchorPane {
         Position newPostion = position.play(event.getIntersection(), current);
         if (newPostion != null) {
           setPosition(newPostion, current.getOpponentStatus());
+          saveStep();
         }
       });
     }
@@ -127,12 +135,21 @@ public class GobanComponent extends AnchorPane {
   }
 
   private void goBack() {
-    if (history.size() <= 1) return;
+    if (historyIndex == 0) return;
 
-    history.removeLast();
-    Step step = history.peekLast();
+    historyIndex--;
+
+    Step step = history.get(historyIndex);
     setPosition(step.getPosition(), step.getCurrent());
-    history.removeLast();
+  }
+
+  private void goForward() {
+    if (historyIndex == history.size() - 1) return;
+
+    historyIndex++;
+
+    Step step = history.get(historyIndex);
+    setPosition(step.getPosition(), step.getCurrent());
   }
 
   public void updateInfo() {
@@ -145,6 +162,10 @@ public class GobanComponent extends AnchorPane {
   }
 
   private void saveStep() {
+    if (!history.isEmpty() && historyIndex != history.size() - 1) {
+      history = new LinkedList<>(history.subList(0, historyIndex + 1));
+    }
     history.add(new Step(current, position));
+    historyIndex = history.size() - 1;
   }
 }
