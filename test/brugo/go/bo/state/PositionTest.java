@@ -331,6 +331,35 @@ public class PositionTest {
             "O captured 0 stones.\n");
   }
 
+  @Test
+  public void shouldRemoved_whenRegionHasNoLiberty_caseAlreadySurrounded() {
+    // given
+    givenBd("---------------\n" +
+            "| . . . . . . |\n" +
+            "| . . X X . . |\n" +
+            "| . X O O X . |\n" +
+            "| . X O . X . |\n" +
+            "| . . X X . . |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 0 stones.\n" +
+            "O captured 0 stones.\n");
+
+    // when
+    position = position.play(Intersection.valueOf(3, 3), Status.BLACK);
+
+    assertB("---------------\n" +
+            "| . . . . . . |\n" +
+            "| . . X X . . |\n" +
+            "| . X . . X . |\n" +
+            "| . X . X X . |\n" +
+            "| . . X X . . |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 0 stones.\n" +
+            "O captured 3 stones.\n");
+  }
+
   private void givenBd(String board) {
     List<String> lines = new LinkedList<>(Arrays.asList(board.split("\n")));
     int white = getCaptured(lines);
