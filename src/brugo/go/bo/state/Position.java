@@ -12,7 +12,7 @@ public final class Position implements Comparable {
   private double komi;
   private Status[][] matrix;
   private int size;
-  private Map<Status, Integer> capturedStones = new HashMap<>();
+  private Map<Status, Integer> capturedStones = new LinkedHashMap<>();
 
   public Position(int size, double komi) {
     this.size = size;
@@ -508,7 +508,7 @@ public final class Position implements Comparable {
       for (int i = 0; i < size; i++) {
         builder.append("|");
         for (int j = 0; j < size; j++) {
-          status = matrix[i][j];
+          status = matrix[j][i];
           builder.append(" ");
           builder.append(status.toChar());
         }
