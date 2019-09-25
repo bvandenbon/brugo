@@ -603,6 +603,169 @@ public class PositionTest {
             "O captured 3 stones.\n");
   }
 
+  @Test
+  public void shouldLongKo() {
+    // given
+    givenBd("-------------------\n" +
+            "| . X O . O X O . |\n" +
+            "| . X O O X X O . |\n" +
+            "| . X O . O X O . |\n" +
+            "| . X O O X X O . |\n" +
+            "| . X O X . X O . |\n" +
+            "| . X O O X X O . |\n" +
+            "| . X X X O O O . |\n" +
+            "| . . . . . . . . |\n" +
+            "-------------------\n" +
+            "X captured 0 stones.\n" +
+            "O captured 0 stones.\n");
+
+    // when
+    position = position.play(Intersection.valueOf(3, 0), Status.BLACK);
+
+    String step1 =
+            "---------------\n" +
+            "| . X O X k X |\n" +
+            "| . X O O X X |\n" +
+            "| . X O . O X |\n" +
+            "| . X O O X X |\n" +
+            "| . X O X . X |\n" +
+            "| . X O O X X |\n" +
+            "---------------\n";
+
+    assertB(step1 +
+            "X captured 0 stones.\n" +
+            "O captured 1 stones.\n");
+
+    // when
+    position = position.play(Intersection.valueOf(4, 4), Status.WHITE);
+
+    String step2 =
+            "---------------\n" +
+            "| . X O X . X |\n" +
+            "| . X O O X X |\n" +
+            "| . X O . O X |\n" +
+            "| . X O O X X |\n" +
+            "| . X O k O X |\n" +
+            "| . X O O X X |\n" +
+            "---------------\n";
+
+    assertB(step2 +
+            "X captured 1 stones.\n" +
+            "O captured 1 stones.\n");
+
+    // when
+    position = position.play(Intersection.valueOf(3, 2), Status.BLACK);
+
+    String step3 =
+            "---------------\n" +
+            "| . X O X . X |\n" +
+            "| . X O O X X |\n" +
+            "| . X O X k X |\n" +
+            "| . X O O X X |\n" +
+            "| . X O . O X |\n" +
+            "| . X O O X X |\n" +
+            "---------------\n";
+
+    assertB(step3 +
+            "X captured 1 stones.\n" +
+            "O captured 2 stones.\n");
+
+    // when
+    position = position.play(Intersection.valueOf(4, 0), Status.WHITE);
+
+    String step4 =
+            "---------------\n" +
+            "| . X O k O X |\n" +
+            "| . X O O X X |\n" +
+            "| . X O X . X |\n" +
+            "| . X O O X X |\n" +
+            "| . X O . O X |\n" +
+            "| . X O O X X |\n" +
+            "---------------\n";
+
+    assertB(step4 +
+            "X captured 2 stones.\n" +
+            "O captured 2 stones.\n");
+
+    // when
+    position = position.play(Intersection.valueOf(3, 4), Status.BLACK);
+
+    String step5 =
+            "---------------\n" +
+            "| . X O . O X |\n" +
+            "| . X O O X X |\n" +
+            "| . X O X . X |\n" +
+            "| . X O O X X |\n" +
+            "| . X O X k X |\n" +
+            "| . X O O X X |\n" +
+            "---------------\n";
+
+    assertB(step5 +
+            "X captured 2 stones.\n" +
+            "O captured 3 stones.\n");
+
+    // when
+    position = position.play(Intersection.valueOf(4, 2), Status.WHITE);
+
+    String step6 =
+            "---------------\n" +
+            "| . X O . O X |\n" +
+            "| . X O O X X |\n" +
+            "| . X O k O X |\n" +
+            "| . X O O X X |\n" +
+            "| . X O X . X |\n" +
+            "| . X O O X X |\n" +
+            "---------------\n";
+
+    assertB(step6 +
+            "X captured 3 stones.\n" +
+            "O captured 3 stones.\n");
+
+    // ------------ once again --------------
+
+    // when
+    position = position.play(Intersection.valueOf(3, 0), Status.BLACK);
+
+    assertB(step1 +
+            "X captured 3 stones.\n" +
+            "O captured 4 stones.\n");
+
+    // when
+    position = position.play(Intersection.valueOf(4, 4), Status.WHITE);
+
+    assertB(step2 +
+            "X captured 4 stones.\n" +
+            "O captured 4 stones.\n");
+
+    // when
+    position = position.play(Intersection.valueOf(3, 2), Status.BLACK);
+
+    assertB(step3 +
+            "X captured 4 stones.\n" +
+            "O captured 5 stones.\n");
+
+    // when
+    position = position.play(Intersection.valueOf(4, 0), Status.WHITE);
+
+    assertB(step4 +
+            "X captured 5 stones.\n" +
+            "O captured 5 stones.\n");
+
+    // when
+    position = position.play(Intersection.valueOf(3, 4), Status.BLACK);
+
+    assertB(step5 +
+            "X captured 5 stones.\n" +
+            "O captured 6 stones.\n");
+
+    // when
+    position = position.play(Intersection.valueOf(4, 2), Status.WHITE);
+
+    assertB(step6 +
+            "X captured 6 stones.\n" +
+            "O captured 6 stones.\n");
+  }
+
   private void givenBd(String board) {
     List<String> lines = new LinkedList<>(Arrays.asList(board.split("\n")));
     int white = getCaptured(lines);
@@ -635,10 +798,10 @@ public class PositionTest {
       for (int x = 0; x < row.length(); x++) {
         switch (row.charAt(x)) {
           case 'X' :
-            position = position.play(Intersection.valueOf(x, y), Status.BLACK);
+            position.setStatus(Intersection.valueOf(x, y), Status.BLACK);
             break;
           case 'O' :
-            position = position.play(Intersection.valueOf(x, y), Status.WHITE);
+            position.setStatus(Intersection.valueOf(x, y), Status.WHITE);
             break;
         }
 
