@@ -220,6 +220,38 @@ public class PositionTest {
             "O captured 0 stones.\n");
   }
 
+  @Test
+  public void shouldDoNothing_whenSuicidalStep() {
+    // given
+    givenBd("---------------\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . X . . |\n" +
+            "| . . X . X . |\n" +
+            "| . . . X . . |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 0 stones.\n" +
+            "O captured 0 stones.\n");
+
+    // when
+    Position newPosition = position.play(Intersection.valueOf(3, 3), Status.WHITE);
+
+    // then
+    assertEquals(newPosition, null);
+
+    assertB("---------------\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . X . . |\n" +
+            "| . . X . X . |\n" +
+            "| . . . X . . |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 0 stones.\n" +
+            "O captured 0 stones.\n");
+  }
+
   private void givenBd(String board) {
     List<String> lines = new LinkedList<>(Arrays.asList(board.split("\n")));
     int white = getCaptured(lines);
