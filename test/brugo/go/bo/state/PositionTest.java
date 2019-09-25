@@ -441,6 +441,108 @@ public class PositionTest {
   }
 
   @Test
+  public void shouldCanMakeAMove_whenNotKoSituation1() {
+    // given
+    givenBd("---------------\n" +
+            "| . X O O . O |\n" +
+            "| . . X X O . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 0 stones.\n" +
+            "O captured 0 stones.\n");
+
+    // when
+    position = position.play(Intersection.valueOf(4, 0), Status.BLACK);
+
+    // then
+    assertB("---------------\n" +
+            "| . X . . X O |\n" +
+            "| . . X X O . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 0 stones.\n" +
+            "O captured 2 stones.\n");
+
+    // when
+    position = position.play(Intersection.valueOf(3, 0), Status.WHITE);
+
+    assertB("---------------\n" +
+            "| . X . O . O |\n" +
+            "| . . X X O . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 1 stones.\n" +
+            "O captured 2 stones.\n");
+  }
+
+  @Test
+  public void shouldCanMakeAMove_whenNotKoSituation2() {
+    // given
+    givenBd("---------------\n" +
+            "| . X O . X O |\n" +
+            "| . . X O O . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 0 stones.\n" +
+            "O captured 0 stones.\n");
+
+    // when
+    position = position.play(Intersection.valueOf(3, 0), Status.BLACK);
+
+    // then
+    assertB("---------------\n" +
+            "| . X . X X O |\n" +
+            "| . . X O O . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 0 stones.\n" +
+            "O captured 1 stones.\n");
+
+    // when
+    position = position.play(Intersection.valueOf(2, 0), Status.WHITE);
+
+    assertB("---------------\n" +
+            "| . X O . . O |\n" +
+            "| . . X O O . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 2 stones.\n" +
+            "O captured 1 stones.\n");
+
+    // when
+    position = position.play(Intersection.valueOf(3, 0), Status.BLACK);
+
+    assertB("---------------\n" +
+            "| . X . X . O |\n" +
+            "| . . X O O . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 2 stones.\n" +
+            "O captured 2 stones.\n");
+  }
+
+  @Test
   public void shouldCantMakeAMove_whenRegionWillLostLiberty() {
     // given
     givenBd("---------------\n" +
