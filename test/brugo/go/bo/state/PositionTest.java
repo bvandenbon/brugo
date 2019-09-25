@@ -160,6 +160,66 @@ public class PositionTest {
             "O captured 4 stones.\n");
   }
 
+  @Test
+  public void shouldRemoved_whenRegionHasNoLiberty_withBorder() {
+    // given
+    givenBd("---------------\n" +
+            "| . . . . . . |\n" +
+            "| . . . . X X |\n" +
+            "| . . . X O O |\n" +
+            "| . . . X O O |\n" +
+            "| . . . . X . |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 0 stones.\n" +
+            "O captured 0 stones.\n");
+
+    // when
+    position = position.play(Intersection.valueOf(5, 4), Status.BLACK);
+
+    // then
+    assertB("---------------\n" +
+            "| . . . . . . |\n" +
+            "| . . . . X X |\n" +
+            "| . . . X . . |\n" +
+            "| . . . X . . |\n" +
+            "| . . . . X X |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 0 stones.\n" +
+            "O captured 4 stones.\n");
+  }
+
+  @Test
+  public void shouldNotRemoved_whenRegionHasLiberty_withBorder() {
+    // given
+    givenBd("---------------\n" +
+            "| . . . . . . |\n" +
+            "| . . . . X X |\n" +
+            "| . . . X O O |\n" +
+            "| . . . X O O |\n" +
+            "| . . . . X . |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 0 stones.\n" +
+            "O captured 0 stones.\n");
+
+    // when
+    position = position.play(Intersection.valueOf(4, 5), Status.BLACK);
+
+    // then
+    assertB("---------------\n" +
+            "| . . . . . . |\n" +
+            "| . . . . X X |\n" +
+            "| . . . X O O |\n" +
+            "| . . . X O O |\n" +
+            "| . . . . X . |\n" +
+            "| . . . . X . |\n" +
+            "---------------\n" +
+            "X captured 0 stones.\n" +
+            "O captured 0 stones.\n");
+  }
+
   private void givenBd(String board) {
     List<String> lines = new LinkedList<>(Arrays.asList(board.split("\n")));
     int white = getCaptured(lines);
