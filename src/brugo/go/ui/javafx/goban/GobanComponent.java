@@ -1,11 +1,12 @@
 package brugo.go.ui.javafx.goban;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Consumer;
 
 import brugo.go.bo.state.Status;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import brugo.go.bo.state.Intersection;
@@ -16,12 +17,14 @@ import brugo.go.bo.state.Position;
  * @see brugo.go.ui.javafx.goban.GobanComponentDemo
  */
 public class GobanComponent extends AnchorPane {
-  protected Status current = Status.BLACK;
+  protected Status current;
   protected GobanDrawer gobanDrawer;
   protected Position position;
   protected GobanCanvas canvas;
   protected Map<Intersection, GobanDrawer.DrawPosition> drawPositionMap;
   protected Set<Intersection> selectedIntersections;
+  protected Consumer<String> onChange;
+  protected History history;
 
   public GobanComponent() {
     // create drawer
@@ -31,13 +34,22 @@ public class GobanComponent extends AnchorPane {
     // create canvas to draw on
     canvas = new GobanCanvas();
     getChildren().add(canvas);
+
+    history = new History();
   }
 
-  public void setPosition(Position position) {
-    if (this.position == position) return;
+  public void setPosition(Position position, Status status) {
+    if (this.position == position && current == status) return;
 
     this.position = position;
+    this.current = status;
+
     canvas.redraw();
+    updateInfo();
+
+    if (history.isEmpty()) {
+      history.saveStep(getStep());
+    }
   }
 
   public void setSelectedIntersection(Intersection intersection) {
@@ -61,10 +73,15 @@ public class GobanComponent extends AnchorPane {
     return position;
   }
 
+  public void onChange(Consumer<String> onChange) {
+    this.onChange = onChange;
+  }
+
   private class GobanCanvas extends javafx.scene.canvas.Canvas {
 
     public GobanCanvas() {
       GobanComponent wrapper = GobanComponent.this;
+      setFocusTraversable(true);
       widthProperty().bind(wrapper.widthProperty());
       heightProperty().bind(wrapper.heightProperty());
 
@@ -82,11 +99,26 @@ public class GobanComponent extends AnchorPane {
         if (intersection != null) fireEvent(new GobanEvent(GobanEvent.GOBAN_CLICKED, intersection));
       });
 
+      addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+        if (KeyCode.LEFT.equals(event.getCode())) {
+          history.goBack(step -> setPosition(step.getPosition(), step.getCurrent()));
+        }
+
+        if (KeyCode.RIGHT.equals(event.getCode())) {
+          history.goForward(step -> setPosition(step.getPosition(), step.getCurrent()));
+        }
+
+        if (KeyCode.ESCAPE.equals(event.getCode())) {
+          setPosition(position, current.getOpponentStatus());
+          history.saveStep(getStep());
+        }
+      });
+
       addEventHandler(GobanEvent.GOBAN_CLICKED, event -> {
         Position newPostion = position.play(event.getIntersection(), current);
         if (newPostion != null) {
-          setPosition(newPostion);
-          current = current.getOpponentStatus();
+          setPosition(newPostion, current.getOpponentStatus());
+          history.saveStep(getStep());
         }
       });
     }
@@ -106,4 +138,19 @@ public class GobanComponent extends AnchorPane {
       drawPositionMap = gobanDrawer.drawPosition(gctx2D, position, fullWidthPx, fullHeightPx, selectedIntersections);
     }
   }
+
+  private Step getStep() {
+    return new Step(current, position);
+  }
+
+  public void updateInfo() {
+    onChange.accept(String.format("Current: %s | Captured: X:%s O:%s | Active: X:%s O:%s",
+            current,
+            position.getCapturedStonesCount(Status.BLACK),
+            position.getCapturedStonesCount(Status.WHITE),
+            position.getIntersectionCountByColor(Status.BLACK),
+            position.getIntersectionCountByColor(Status.WHITE)));
+  }
+
+
 }

@@ -575,6 +575,36 @@ public class PositionTest {
   }
 
   @Test
+  public void shouldAllowSuicidalStep_whenRegionWillLostLiberty() {
+    // given
+    givenBd("---------------\n" +
+            "| X X X X X X |\n" +
+            "| X X X X X X |\n" +
+            "| X X X O X X |\n" +
+            "| X X O . O X |\n" +
+            "| X X X X X X |\n" +
+            "| X X X X X X |\n" +
+            "---------------\n" +
+            "X captured 0 stones.\n" +
+            "O captured 0 stones.\n");
+
+    // when
+    position = position.play(Intersection.valueOf(3, 3), Status.WHITE);
+
+    // then
+    assertB("---------------\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . O . . |\n" +
+            "| . . O O O . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 32 stones.\n" +
+            "O captured 0 stones.\n");
+  }
+
+  @Test
   public void shouldRemoved_whenRegionHasNoLiberty_caseAlreadySurrounded() {
     // given
     givenBd("---------------\n" +
@@ -764,6 +794,118 @@ public class PositionTest {
     assertB(step6 +
             "X captured 6 stones.\n" +
             "O captured 6 stones.\n");
+  }
+
+  @Test
+  public void shouldCanMakeAMove_whenKoSituation_afterOneSep() {
+    // given
+    givenBd("---------------\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . X O . |\n" +
+            "| . . X . X O |\n" +
+            "| . . . X O . |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 0 stones.\n" +
+            "O captured 0 stones.\n");
+
+    // when
+    position = position.play(Intersection.valueOf(3, 3), Status.WHITE);
+
+    // then
+    assertB("---------------\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . X O . |\n" +
+            "| . . X O k O |\n" +
+            "| . . . X O . |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 1 stones.\n" +
+            "O captured 0 stones.\n");
+
+    // then (forbidden)
+    assertEquals(position.play(Intersection.valueOf(4, 3), Status.BLACK), null);
+
+    // when
+    position = position.play(Intersection.valueOf(0, 0), Status.BLACK);
+
+    // then
+    assertB("---------------\n" +
+            "| X . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . X O . |\n" +
+            "| . . X O . O |\n" +
+            "| . . . X O . |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 1 stones.\n" +
+            "O captured 0 stones.\n");
+
+    // when (allowed)
+    position = position.play(Intersection.valueOf(4, 3), Status.BLACK);
+
+    // then
+    assertB("---------------\n" +
+            "| X . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . X O . |\n" +
+            "| . . X k X O |\n" +
+            "| . . . X O . |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 1 stones.\n" +
+            "O captured 1 stones.\n");
+  }
+
+  @Test
+  public void shouldCantMakeAMove_whenKoSituation_evenIfOpponentSkip() {
+    // given
+    givenBd("---------------\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . X O . |\n" +
+            "| . . X . X O |\n" +
+            "| . . . X O . |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 0 stones.\n" +
+            "O captured 0 stones.\n");
+
+    // when
+    position = position.play(Intersection.valueOf(3, 3), Status.WHITE);
+
+    // then
+    assertB("---------------\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . X O . |\n" +
+            "| . . X O k O |\n" +
+            "| . . . X O . |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 1 stones.\n" +
+            "O captured 0 stones.\n");
+
+    // then (forbidden for everyotne)
+    Position newPosition1 = position.play(Intersection.valueOf(4, 3), Status.WHITE); // TODO why this is real?
+    Position newPosition2 = position.play(Intersection.valueOf(4, 3), Status.BLACK);
+
+    // then
+    assertEquals(newPosition1, null);
+    assertEquals(newPosition2, null);
+
+    assertB("---------------\n" +
+            "| . . . . . . |\n" +
+            "| . . . . . . |\n" +
+            "| . . . X O . |\n" +
+            "| . . X O k O |\n" +
+            "| . . . X O . |\n" +
+            "| . . . . . . |\n" +
+            "---------------\n" +
+            "X captured 1 stones.\n" +
+            "O captured 0 stones.\n");
   }
 
   private void givenBd(String board) {
